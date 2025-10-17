@@ -20,14 +20,6 @@ from tesstapp import views
 from django.urls import path,include
 from tesstapp.views import RestaurantViewSet, FoodItemViewSet 
 from tesstapp import views
-
-# from rest_framework.routers import DefaultRouter
-# router=DefaultRouter()
-# router.register(r'restaurants',restaurantViewSet)
-# router.register(r'foods',fooditemViewSet)
-
-
-# tesstapp/urls.py
 from django.urls import path
 from tesstapp import views
 
@@ -43,11 +35,3 @@ urlpatterns = [
     path('search/', views.search, name='search'),
 ]
 
-# from django.contrib import admin
-# from django.urls import path, include
-# from tesstapp import views   
-
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-#     path('', include('tesstapp.urls')),  # Include all app URLs
-# ]

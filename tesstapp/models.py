@@ -4,7 +4,7 @@ class Restaurant(models.Model):
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
     rating = models.FloatField()
-    # Add other fields as needed
+    
 
 class FoodItem(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='menu')

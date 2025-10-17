@@ -38,8 +38,7 @@
     </style>
 </head>
 <body>
-
-    <!-- Restaurant Info -->
+    
     <div class="restaurant-info">
         <h1 class="text-3xl font-bold">{{ restaurant.name }}</h1>
         <p class="text-lg">{{ restaurant.description }}</p>
@@ -48,7 +47,6 @@
         <p>Rating: {{ restaurant.rating }}</p>
     </div>
 
-    <!-- Food Items -->
     <h2 class="text-2xl font-semibold mb-4">Menu</h2>
     <div class="food-items">
         {% for food in food_items %}
@@ -64,7 +62,6 @@
         {% endfor %}
     </div>
 
-    <!-- Go to Cart Button -->
     <div class="cart-btn">
         <a href="{% url 'cart_page' %}" 
            class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded">

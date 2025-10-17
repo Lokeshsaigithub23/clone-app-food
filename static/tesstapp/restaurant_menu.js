@@ -1,5 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
-    // Add individual menu items to cart
+document.addEventListener("DOMContentLoaded", () => {    
     const buttons = document.querySelectorAll(".add-to-cart-btn");
     buttons.forEach(btn => {
         btn.addEventListener("click", () => {
@@ -8,21 +7,17 @@ document.addEventListener("DOMContentLoaded", () => {
             const price = parseFloat(btn.getAttribute("data-price"));
 
             let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-            // Check if item is already in the cart
+            
             const existingItem = cart.find(item => item.id === id);
             if (existingItem) {
                 alert(name + " is already in the cart!");
                 return;
             }
-
             cart.push({id, name, price});
             localStorage.setItem("cart", JSON.stringify(cart));
             alert(name + " added to cart!");
         });
     });
-
-    // Optional: Add all items of this restaurant to cart
     const addAllBtn = document.getElementById("add-restaurant-cart");
     if(addAllBtn){
         addAllBtn.addEventListener("click", () => {
@@ -33,7 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 const name = btn.getAttribute("data-name");
                 const price = parseFloat(btn.getAttribute("data-price"));
 
-                // Add only if not already in cart
                 if (!cart.find(item => item.id === id)) {
                     cart.push({id, name, price});
                 }
