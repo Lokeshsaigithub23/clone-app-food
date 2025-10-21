@@ -28,10 +28,13 @@
             <div class="logo font-bold text-xl">FoodBench</div>
 
             <div class="flex gap-2 justify-around">
-               <form method="get" action="{% url 'search' %}">
-                <input type="text" name="food" placeholder="Search food">
-                <input type="text" name="location" placeholder="Enter location"><button type="submit"></button>
-               </form>
+                <!-- Search Form -->
+               <form action="{% url 'search_both' %}" method="GET" class="flex gap-2">
+                   <input type="text" name="food" placeholder="Search food..." class="px-2 py-1 border rounded">
+                   <input type="text" name="location" placeholder="Location" class="px-2 py-1 border rounded">
+                   <button type="submit" class="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">Search</button>
+                </form>
+
             </div>
 
             <div class="flex gap-2 flex justify-around ">

@@ -30,8 +30,12 @@ urlpatterns = [
     path('cart/', views.cart_page, name='cart_page'),
     path('login/', views.login_view, name='login'),
     path('signup/', views.signup_view, name='signup'),
-    path('search_food/', views.search_food, name='search_food'),
-    path('search_location/', views.search_location, name='search_location'),
-    path('search/', views.search, name='search'),
+    # path('search_food/', views.search_food, name='search_food'),
+    # path('search_location/', views.search_location, name='search_location'),
+    path('order/<int:restaurant_id>/', views.order_page, name='order'),
+    path('bill/<int:restaurant_id>/', views.bill_page, name='bill'),
+    path('search/', views.search_both, name='search_both'),
 ]
+
+
 

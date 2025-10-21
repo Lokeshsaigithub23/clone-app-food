@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FoodBench - Bill</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <style>
+    @media print {
+      button, a { display: none; }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 flex flex-col items-center justify-center min-h-screen">
+  <div class="bg-white p-6 rounded-xl shadow-md w-96 text-center">
+    <h1 class="text-2xl font-bold mb-4">FoodBench Invoice</h1>
+    <p><b>Restaurant:</b> {{ restaurant.name }}</p>
+    <p><b>Location:</b> {{ restaurant.location }}</p>
+    <hr class="my-4">
+
+    {% if order_items %}
+      <div class="text-left">
+        {% for item in order_items %}
+          <div class="flex justify-between mb-2">
+            <span>{{ item.name }}</span>
+            <span>₹{{ item.price }}</span>
+          </div>
+        {% endfor %}
+      </div>
+
+      <hr class="my-4">
+      <div class="flex justify-between font-bold">
+        <span>Total</span>
+        <span>₹{{ total }}</span>
+      </div>
+    {% else %}
+      <p class="text-red-600 font-semibold mt-4">{{ message }}</p>
+    {% endif %}
+
+    <button onclick="window.print()" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+      Print Bill
+    </button>
+  </div>
+</body>
+</html>
