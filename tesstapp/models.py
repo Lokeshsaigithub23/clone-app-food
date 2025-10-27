@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from django.db import models
 
 class Restaurant(models.Model):
@@ -40,7 +39,7 @@ class FoodItem(models.Model):
 
     def __str__(self):
         return self.name
-=======
+
 from django.db import models
 
 class Restaurant(models.Model):
@@ -54,4 +53,3 @@ class FoodItem(models.Model):
     name = models.CharField(max_length=100)
     price = models.FloatField()
     description = models.TextField()
->>>>>>> 89753d7a3ee7e84d925c5a0aad0c3b4ce46fad57
