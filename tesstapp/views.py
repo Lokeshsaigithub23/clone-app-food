@@ -78,20 +78,20 @@ def order_page(request, restaurant_id):
 
 #bill printing
 
-def bill_page(request, restaurant_id):
-    restaurant = get_object_or_404(Restaurant, id=restaurant_id)
-    order_items = FoodItem.objects.filter(restaurant=restaurant)
-    total = sum(item.price for item in order_items)
-    if not order_items.exists():
-        message = "No items in menu. You can order something!"
-    else:
-        message = ""
-    return render(request, 'tesstapp/bill.html', {
-        'restaurant': restaurant,
-        'order_items': order_items,
-        'total': total,
-        'message': message
-    })
+# def bill_page(request, restaurant_id):
+#     restaurant = get_object_or_404(Restaurant, id=restaurant_id)
+#     order_items = FoodItem.objects.filter(restaurant=restaurant)
+#     total = sum(item.price for item in order_items)
+#     if not order_items.exists():
+#         message = "No items in menu. You can order something!"
+#     else:
+#         message = ""
+#     return render(request, 'tesstapp/bill.html', {
+#         'restaurant': restaurant,
+#         'order_items': order_items,
+#         'total': total,
+#         'message': message
+#     })
 
 
 #comibed search

@@ -20,6 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from tesstapp import views
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home_page, name='home_page'),
@@ -29,8 +30,8 @@ urlpatterns = [
     path('signup/', views.signup_view, name='signup'),
     # path('logout/', views.logout_view, name='logout'),
     path('cart/', views.cart_page, name='cart_page'),
-    path('bill/', views.bill_page, name='bill_page'),
+    # path('bill/', views.bill_page, name='bill_page'),
     path('order/<int:restaurant_id>/', views.order_page, name='order'),
 ]
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+       urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

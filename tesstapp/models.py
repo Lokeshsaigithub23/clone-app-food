@@ -4,8 +4,7 @@ class Restaurant(models.Model):
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
     rating = models.FloatField(default=0.0)
-    image = models.ImageField(upload_to='restaurant_images/', null=True, blank=True)
-
+    image = models.ImageField(upload_to='restro-images/', null=True, blank=True)
     @property
     def image_url(self):
         """Safely return uploaded image URL or fallback"""
@@ -39,17 +38,3 @@ class FoodItem(models.Model):
 
     def __str__(self):
         return self.name
-
-from django.db import models
-
-class Restaurant(models.Model):
-    name = models.CharField(max_length=100)
-    location = models.CharField(max_length=100)
-    rating = models.FloatField()
-    
-
-class FoodItem(models.Model):
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='menu')
-    name = models.CharField(max_length=100)
-    price = models.FloatField()
-    description = models.TextField()

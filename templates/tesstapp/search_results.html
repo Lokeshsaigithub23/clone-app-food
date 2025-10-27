@@ -3,63 +3,75 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Search Results</title>
+    <title>Search Results | FoodBench</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex flex-col items-center p-6">
 
-    <!-- Back to Home -->
-    <a href="{% url 'home_page' %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mb-6">
+<body class="min-h-screen bg-gradient-to-br from-orange-400 via-yellow-300 to-pink-400 flex flex-col items-center p-8">
+
+    <!-- Back Button -->
+    <a href="{% url 'home_page' %}" 
+       class="bg-blue-600 text-white px-5 py-2 rounded-full shadow-md hover:bg-blue-700 hover:scale-105 transition mb-8">
         ← Back to Home
     </a>
 
     <!-- Header -->
-    <h1 class="text-2xl font-bold mb-6 text-center">{{ header_text }}</h1>
+    <div class="text-center mb-8">
+        <h1 class="text-4xl font-extrabold text-gray-800 tracking-wide mb-2">Search Results</h1>
+        <p class="text-gray-700 text-lg">{{ header_text }}</p>
+    </div>
 
-    <!-- No restaurants message -->
+    <!-- Conditional Messages -->
     {% if no_restaurants_message %}
-        <p class="text-red-600 font-semibold mt-4 text-center">{{ no_restaurants_message }}</p>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg shadow-md text-center">
+            {{ no_restaurants_message }}
+        </div>
+
     {% elif restaurant_results %}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
+        <!-- Restaurant Results Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl">
             {% for restaurant in restaurant_results %}
-                <div class="bg-white shadow-md rounded-xl p-4 flex flex-col hover:shadow-xl transition">
-                    <h2 class="text-xl font-semibold mb-1">🏪 {{ restaurant.name }}</h2>
+                <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-6 flex flex-col hover:shadow-2xl hover:-translate-y-1 transition">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-1">🏪 {{ restaurant.name }}</h2>
                     <p class="text-gray-600 mb-1">📍 {{ restaurant.location }}</p>
                     <p class="text-yellow-500 font-medium mb-3">⭐ {{ restaurant.rating }}</p>
 
                     <!-- Food Items -->
-                    <h4 class="font-semibold mb-2">Food Items:</h4>
-                    {% with foods=restaurant_food_dict.restaurant %}
-                        {% if foods %}
-                            {% for food in foods %}
-                                <div class="border-t border-gray-200 pt-2 mt-2">
-                                    <h3 class="text-lg font-semibold mb-1">🍽 {{ food.name }}</h3>
-                                    <p class="text-green-600 font-medium mb-1">💰 ₹{{ food.price }}</p>
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            {% if food_query and location %}
-                                <p class="text-gray-500 mt-2">No "{{ food_query }}" items found in this restaurant.</p>
-                            {% elif food_query %}
-                                <p class="text-gray-500 mt-2">No "{{ food_query }}" items found in this restaurant.</p>
+                    <div class="bg-gray-50 rounded-lg p-3 mb-3">
+                        <h4 class="font-semibold mb-2 text-gray-700">🍽 Available Dishes:</h4>
+                        {% with foods=restaurant_food_dict.restaurant %}
+                            {% if foods %}
+                                {% for food in foods %}
+                                    <div class="border-t border-gray-200 pt-2 mt-2">
+                                        <h3 class="text-lg font-semibold text-gray-800 mb-1">{{ food.name }}</h3>
+                                        <p class="text-green-600 font-medium">💰 ₹{{ food.price }}</p>
+                                    </div>
+                                {% endfor %}
                             {% else %}
-                                <p class="text-gray-500 mt-2">No food items found for this restaurant.</p>
+                                <p class="text-gray-500 italic mt-2">
+                                    {% if food_query %}
+                                        No "{{ food_query }}" items found here.
+                                    {% else %}
+                                        No food items available.
+                                    {% endif %}
+                                </p>
                             {% endif %}
-                        {% endif %}
-                    {% endwith %}
+                        {% endwith %}
+                    </div>
 
                     <!-- View Menu Button -->
                     <a href="{% url 'restaurant_menu' restaurant.id %}" 
-                       class="mt-auto bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 text-center mt-3">
+                       class="mt-auto bg-green-600 text-white px-5 py-2.5 rounded-lg hover:bg-green-700 transition font-medium text-center">
                         View Menu
                     </a>
                 </div>
             {% endfor %}
         </div>
+
     {% else %}
-        <p class="text-red-600 font-semibold mt-4 text-center">
-            No restaurants found{% if location %} in "{{ location }}"{% endif %}.
-        </p>
+        <div class="bg-yellow-100 border border-yellow-300 text-yellow-800 px-6 py-4 rounded-lg shadow-md text-center">
+            No restaurants found{% if location %} in "<b>{{ location }}</b>"{% endif %}.
+        </div>
     {% endif %}
 
 </body>

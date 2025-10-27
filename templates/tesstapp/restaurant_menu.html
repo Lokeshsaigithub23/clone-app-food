@@ -2,74 +2,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>{{ restaurant.name }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            background: rgba(6, 224, 224, 0.67);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .restaurant-info {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        .food-card {
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 10px;
-            width: 300px;
-            text-align: center;
-        }
-        .food-items {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-        }
-        .cart-btn {
-            margin-top: 30px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>{{ restaurant.name }} | Menu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: linear-gradient(to bottom right, rgba(73, 136, 219, 0.8), rgba(218, 160, 73, 0.8));
+      background-attachment: fixed;
+    }
+    .food-card:hover {
+      transform: scale(1.03);
+      transition: all 0.25s ease-in-out;
+    }
+  </style>
 </head>
-<body>
-    <div class="restaurant-info">
-        <h1 class="text-3xl font-bold">{{ restaurant.name }}</h1>
-        <p class="text-lg">{{ restaurant.description }}</p>
-        <img src="{{ restaurant.image_url }}" alt="{{ restaurant.name }}" width="300">
-        <p>Location: {{ restaurant.location }}</p>
-        <p>Rating: {{ restaurant.rating }}</p>
-    </div>
 
-    <h2 class="text-2xl font-semibold mb-4">Menu</h2>
-    <div class="food-items">
-        {% for food in food_items %}
-            <div class="food-card">
-                <h3 class="text-xl font-bold">{{ food.name }}</h3>
-                <p>{{ food.description }}</p>
-                <p>Category: {{ food.category }}</p>
-                <p>Price: ₹{{ food.price }}</p>
-                <img src="{{ food.image_url }}" alt="{{ food.name }}" width="150">
-            </div>
-        {% empty %}
-            <p>No menu items available.</p>
-        {% endfor %}
-    </div>
+<body class="text-gray-800 flex flex-col items-center py-10 px-4">
+  <!-- ✅ Restaurant Info Section -->
+  <div class="bg-white/90 backdrop-blur-sm shadow-lg rounded-2xl p-6 text-center max-w-3xl w-full mb-10">
+    {% if restaurant.image %}
+      <img src="{{ restaurant.image.url }}" alt="{{ restaurant.name }}" 
+           class="mx-auto w-full max-w-md h-64 object-cover rounded-xl mb-4 shadow-md">
+    {% else %}
+      <img src="{% static 'tesstapp/default_restaurant.png' %}" 
+           alt="No image available" 
+           class="mx-auto w-full max-w-md h-64 object-cover rounded-xl mb-4 shadow-md">
+    {% endif %}
+    
+    <h1 class="text-4xl font-bold text-blue-700 mb-2">{{ restaurant.name }}</h1>
+    <p class="text-gray-600 italic mb-3">{{ restaurant.description }}</p>
+    <p class="text-gray-700"><strong>📍 Location:</strong> {{ restaurant.location }}</p>
+    <p class="text-gray-700"><strong>⭐ Rating:</strong> {{ restaurant.rating }}</p>
+  </div>
 
-    <div class="cart-btn">
-        <a href="{% url 'cart_page' %}" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded">Go to Cart</a>
-        <a href="{% url 'order' restaurant.id %}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">Order Now</a>
-    </div>
+  <!-- ✅ Menu Section -->
+  <h2 class="text-3xl font-bold text-white mb-6">🍽️ Menu</h2>
 
-    <div class="backtohome px-4 py-2 rounded-lg hover:bg-blue-700 mt-6 mb-6">
-        <a href="{% url 'home_page' %}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mb-4">← Back to Home</a>
-    </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl">
+    {% for food in food_items %}
+      <div class="food-card bg-white rounded-2xl shadow-lg p-5 text-center hover:shadow-2xl transition">
+        {% if food.image %}
+          <img src="{{ food.image.url }}" alt="{{ food.name }}" class="mx-auto w-full h-40 object-cover rounded-xl mb-3">
+        {% else %}
+          <img src="{% static 'tesstapp/default_food.png' %}" alt="No image available"
+               class="mx-auto w-full h-40 object-cover rounded-xl mb-3">
+        {% endif %}
 
-    <script src="{% static 'tesstapp/restaurant_menu.js' %}"></script>
+        <h3 class="text-xl font-semibold mb-1">{{ food.name }}</h3>
+        {% if food.description %}
+          <p class="text-gray-600 text-sm mb-1">{{ food.description }}</p>
+        {% endif %}
+        <p class="text-gray-700 text-sm mb-1"><strong>Category:</strong> {{ food.category }}</p>
+        <p class="text-lg font-bold text-green-600">₹{{ food.price }}</p>
+      </div>
+    {% empty %}
+      <p class="text-white text-lg text-center col-span-full">No menu items available.</p>
+    {% endfor %}
+  </div>
+
+  <!-- ✅ Action Buttons -->
+  <div class="mt-10 flex gap-4 flex-wrap justify-center">
+    <a href="{% url 'cart_page' %}" 
+       class="bg-yellow-400 hover:bg-yellow-500 text-white px-6 py-3 rounded-lg font-semibold shadow">
+      🛒 Go to Cart
+    </a>
+
+    <a href="{% url 'order' restaurant.id %}" 
+       class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold shadow">
+      ✅ Order Now
+    </a>
+
+    <a href="{% url 'home_page' %}" 
+       class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold shadow">
+      ← Back to Home
+    </a>
+  </div>
+
+  <script src="{% static 'tesstapp/restaurant_menu.js' %}"></script>
 </body>
 </html>
