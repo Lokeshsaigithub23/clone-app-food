@@ -38,6 +38,10 @@
     </style>
 </head>
 <body>
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 89753d7a3ee7e84d925c5a0aad0c3b4ce46fad57
     <div class="restaurant-info">
         <h1 class="text-3xl font-bold">{{ restaurant.name }}</h1>
         <p class="text-lg">{{ restaurant.description }}</p>
@@ -62,12 +66,23 @@
     </div>
 
     <div class="cart-btn">
+<<<<<<< HEAD
         <a href="{% url 'cart_page' %}" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded">Go to Cart</a>
         <a href="{% url 'order' restaurant.id %}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">Order Now</a>
     </div>
 
     <div class="backtohome px-4 py-2 rounded-lg hover:bg-blue-700 mt-6 mb-6">
         <a href="{% url 'home_page' %}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mb-4">← Back to Home</a>
+=======
+        <a href="{% url 'cart_page' %}"  class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded">Go to Cart</a>
+        <a href="{% url 'order' restaurant.id %}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">Order Now</a>
+
+    </div>
+    <div class="backtohome px-4 py-2 rounded-lg hover:bg-blue-700 mt-6 mb-6" >
+
+        <a href="{% url 'home_page' %}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mb-4">← Back to Home</a>
+
+>>>>>>> 89753d7a3ee7e84d925c5a0aad0c3b4ce46fad57
     </div>
 
     <script src="{% static 'tesstapp/restaurant_menu.js' %}"></script>
