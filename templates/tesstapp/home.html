@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodBench | Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            height: 100vh;
+            width: 100vw;
+            background: linear-gradient(to bottom right, rgba(73, 136, 219, 0.692) 10%, rgba(218, 160, 73, 0.651) 70%);
+        }
+        .restaurants > h1 {
+            font-size: 30px;
+        }
+        .restaurants > img {
+            height: 20px;
+            width: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header class="bg-white shadow items-center justify-between">
+        <div class="navbar flex justify-around gap-2">
+            <div class="logo font-bold text-xl">FoodBench</div>
+
+            <div class="flex gap-2 justify-around">
+                <!-- Search Form -->
+                <form action="{% url 'search_both' %}" method="GET" class="flex gap-2">
+                    <input type="text" name="food" placeholder="Search food..." class="px-2 py-1 border rounded">
+                    <input type="text" name="location" placeholder="Location" class="px-2 py-1 border rounded">
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">Search</button>
+                </form>
+            </div>
+
+            <div class="flex gap-2 justify-around">
+                <a href="{% url 'login' %}" class="bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded text-white">Login</a>
+                <a href="{% url 'signup' %}" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-white">Sign Up</a>
+                <button onclick="window.location.href='/cart/'" class="bg-yellow-400 hover:bg-yellow-500 px-3 py-1 rounded text-white">Cart</button>
+            </div>
+        </div>
+    </header>
+    
+
+    <main class="p-4">
+        <div class="restaurants p-6">
+            <h1 class="text-3xl font-bold mb-6">Restaurants</h1>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {% for restaurant in restaurants %}
+                    <a href="{% url 'restaurant_menu' restaurant.id %}" class="block bg-white rounded-lg shadow-md p-4 text-center hover:bg-gray-100 transition">
+                        <h2 class="text-xl font-semibold mb-2">{{ restaurant.name }}</h2>
+                        <p class="mb-1"><strong>Location:</strong> {{ restaurant.location }}</p>
+                        <p class="mb-1"><strong>Rating:</strong> {{ restaurant.rating }}</p>
+                        {% if restaurant.image %}
+                          <img src="{{ restaurant.image.url }}" alt="{{ restaurant.name }}" class="mx-auto w-40 h-32 object-cover rounded mt-2">
+                        {% else %}
+                          <img src="{% static 'tesstapp/default_restaurant.png' %}" alt="No image available" class="mx-auto w-40 h-32 object-cover rounded mt-2">
+                        {% endif %}
+                {% empty %}
+                    <p class="text-center text-gray-600 col-span-full">No restaurants available.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+
+    <script src="{% static 'tesstapp/home.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+"""
+URL configuration for foodbenchs project.
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/5.2/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+from django.contrib import admin
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from tesstapp import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', views.home_page, name='home_page'),
+    path('restaurant/<int:restaurant_id>/', views.restaurant_menu, name='restaurant_menu'),
+    path('search_both/', views.search_both, name='search_both'),
+    path('login/', views.login_view, name='login'),
+    path('signup/', views.signup_view, name='signup'),
+    # path('logout/', views.logout_view, name='logout'),
+    path('cart/', views.cart_page, name='cart_page'),
+    path('bill/', views.bill_page, name='bill_page'),
+    path('order/<int:restaurant_id>/', views.order_page, name='order'),
+]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
