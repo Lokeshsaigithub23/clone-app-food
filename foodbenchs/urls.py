@@ -28,9 +28,9 @@ urlpatterns = [
     path('search_both/', views.search_both, name='search_both'),
     path('login/', views.login_view, name='login'),
     path('signup/', views.signup_view, name='signup'),
-    # path('logout/', views.logout_view, name='logout'),
+    path('remove-from-cart/<int:food_id>/', views.remove_from_cart, name='remove_from_cart'),
     path('cart/', views.cart_page, name='cart_page'),
-    # path('bill/', views.bill_page, name='bill_page'),
+    path('add-to-cart/<int:food_id>/', views.add_to_cart, name='add_to_cart'),
     path('order/<int:restaurant_id>/', views.order_page, name='order'),
 ]
 if settings.DEBUG:

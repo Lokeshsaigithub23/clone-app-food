@@ -3,8 +3,13 @@ from rest_framework import viewsets
 from .serializers import RestaurantSerializer, FoodItemSerializer
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .models import Restaurant, FoodItem 
+from .models import Restaurant, FoodItem ,Cart
 from django.db.models import Q
+from decimal import Decimal
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
+
 
 # Home Page
 def home_page(request):
@@ -21,9 +26,6 @@ def restaurant_menu(request, restaurant_id):
         'food_items': food_items,
     }
     return render(request, 'tesstapp/restaurant_menu.html', context)
-# Cart Page
-def cart_page(request):
-    return render(request, 'tesstapp/cart.html')
 
 # Login Page
 def login_view(request):
@@ -58,41 +60,15 @@ class FoodItemViewSet(viewsets.ModelViewSet):
     queryset = FoodItem.objects.all()
     serializer_class = FoodItemSerializer
 
-#order tracking or food tracking
 
-def order_page(request, restaurant_id):
-    restaurant = get_object_or_404(Restaurant, id=restaurant_id)
-    food_items = FoodItem.objects.filter(restaurant=restaurant)
-    total = sum(item.price for item in food_items)
-    if not food_items.exists():
-        message = "No menu items available. Please add something to order!"
-    else:
-        message = ""
-    return render(request, 'tesstapp/order.html', {
-        'restaurant': restaurant,
-        'food_items': food_items,
-        'total': total,
-        'message': message
-    })
+#add  to cart
 
-
-#bill printing
-
-# def bill_page(request, restaurant_id):
-#     restaurant = get_object_or_404(Restaurant, id=restaurant_id)
-#     order_items = FoodItem.objects.filter(restaurant=restaurant)
-#     total = sum(item.price for item in order_items)
-#     if not order_items.exists():
-#         message = "No items in menu. You can order something!"
-#     else:
-#         message = ""
-#     return render(request, 'tesstapp/bill.html', {
-#         'restaurant': restaurant,
-#         'order_items': order_items,
-#         'total': total,
-#         'message': message
-#     })
-
+@login_required
+def add_to_cart(request, food_id):   
+    food_item = get_object_or_404(FoodItem, id=food_id)
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    cart.food_items.add(food_item)
+    return redirect('cart_page')
 
 #comibed search
 from django.shortcuts import render
@@ -103,8 +79,8 @@ def search_both(request):
     location_query = request.GET.get('location', '').strip()
 
     restaurant_food_dict = {}
-    restaurant_results = Restaurant.objects.none()  # default empty
-    no_restaurants_message = ""  # message to show if needed
+    restaurant_results = Restaurant.objects.none() 
+    no_restaurants_message = "" 
 
     # Case 1: Only food query
     if food_query and not location_query:
@@ -121,9 +97,7 @@ def search_both(request):
 
     # Case 3: Both food + location
     elif food_query and location_query:
-        # Restaurants in that location
         restaurant_results = Restaurant.objects.filter(location__icontains=location_query)
-        # Only keep restaurants that have matching food
         matching_restaurants = []
         for restaurant in restaurant_results:
             matching_food = FoodItem.objects.filter(
@@ -135,8 +109,6 @@ def search_both(request):
                 restaurant_food_dict[restaurant] = matching_food
 
         restaurant_results = Restaurant.objects.filter(id__in=[r.id for r in matching_restaurants])
-
-        # If no restaurant has the food, set the message
         if not restaurant_results.exists():
             no_restaurants_message = f'No restaurants found for "{food_query}" in "{location_query}"'
 
@@ -145,8 +117,6 @@ def search_both(request):
         restaurant_results = Restaurant.objects.all()
         for restaurant in restaurant_results:
             restaurant_food_dict[restaurant] = FoodItem.objects.filter(restaurant=restaurant)
-
-    # Header text
     if food_query and location_query:
         header_text = f'Search Results for "{food_query}" in "{location_query}"'
     elif food_query:
@@ -163,4 +133,60 @@ def search_both(request):
         'food_query': food_query,
         'location': location_query,
         'no_restaurants_message': no_restaurants_message
+    })
+
+
+#cart_page
+
+@login_required
+def cart_page(request):
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    
+    # Update total every time we render the cart page
+    cart.update_total()
+    food_items = cart.food_items.all()
+    
+    return render(request, 'tesstapp/cart.html', {
+        'cart': cart,
+        'food_items': food_items,
+        'total': cart.total,
+    })
+@login_required
+def remove_from_cart(request, food_id):
+    cart, created = Cart.objects.get_or_create(user=request.user)
+    food_item = get_object_or_404(FoodItem, id=food_id)
+    cart.food_items.remove(food_item)
+    cart.calculate_total()
+    return redirect('cart_page')
+
+#odertracking
+
+def order_page(request, restaurant_id):
+    # ✅ 1. Get the restaurant safely
+    restaurant = get_object_or_404(Restaurant, id=restaurant_id)
+
+    # ✅ 2. Get current user's cart (or dummy for guest)
+    cart = None
+    food_items = []
+    total = 0
+
+    if request.user.is_authenticated:
+        cart, created = Cart.objects.get_or_create(user=request.user)
+        food_items = cart.food_items.all()
+        total = cart.total
+    else:
+        # if not logged in, just display sample info
+        message = "Please login to see your order details."
+        return render(request, 'tesstapp/order_error.html', {'message': message})
+
+    # ✅ 3. If no items in cart
+    if not food_items.exists():
+        message = "Your cart is empty. Add items before ordering."
+        return render(request, 'tesstapp/order_error.html', {'message': message})
+
+    # ✅ 4. All good — render the tracking page
+    return render(request, 'tesstapp/order.html', {
+        'restaurant': restaurant,
+        'food_items': food_items,
+        'total': total,
     })

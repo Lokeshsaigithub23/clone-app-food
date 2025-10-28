@@ -18,8 +18,9 @@ document.addEventListener("DOMContentLoaded", () => {
             alert(name + " added to cart!");
         });
     });
+
     const addAllBtn = document.getElementById("add-restaurant-cart");
-    if(addAllBtn){
+    if (addAllBtn) {
         addAllBtn.addEventListener("click", () => {
             let cart = JSON.parse(localStorage.getItem("cart")) || [];
             const menuItems = document.querySelectorAll("#menu-list .add-to-cart-btn");
@@ -36,4 +37,17 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("All items added to cart!");
         });
     }
+
+    // ✅ NEW: Handle "Order Now" button
+    const orderButtons = document.querySelectorAll(".order-now-btn");
+    orderButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const restaurantId = btn.getAttribute("data-restaurant-id");
+            if (restaurantId) {
+                window.location.href = `/order/${restaurantId}/`;
+            } else {
+                alert("Restaurant ID missing!");
+            }
+        });
+    });
 });

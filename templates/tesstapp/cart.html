@@ -17,27 +17,48 @@
 </head>
 <body class="text-gray-800 flex flex-col items-center py-10 px-4">
 
-  <!-- ✅ Page Title -->
+  <!-- 🛒 Page Title -->
   <h1 class="text-4xl font-bold text-white mb-8">🛒 Your Cart</h1>
 
-  <!-- ✅ Cart Items Section -->
+  <!-- 🧾 Cart Items Section -->
   <div id="cart-items" class="w-full max-w-3xl space-y-4">
-   
+    {% if food_items %}
+      {% for item in food_items %}
+        <div class="flex justify-between items-center bg-white shadow-md rounded-lg p-4">
+          <div>
+            <span class="font-semibold text-lg">{{ item.name }}</span><br>
+            <span class="text-gray-500">₹{{ item.price }}</span>
+          </div>
+          <form action="{% url 'remove_from_cart' item.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md shadow">
+              ❌ Remove
+            </button>
+          </form>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-center text-white font-semibold mt-6">🛒 Your cart is empty!</p>
+    {% endif %}
   </div>
 
-  <!-- ✅ Total and Buttons Section -->
-  <div class="mt-10 bg-white/90 backdrop-blur-sm shadow-lg rounded-2xl px-6 py-4 text-center max-w-md w-full">
-    <strong class="text-2xl text-gray-700">Total: ₹<span id="cart-total">0.00</span></strong>
+  <!-- 💰 Total and Buttons Section -->
+  <div class="mt-10 bg-white/90 backdrop-blur-sm shadow-lg rounded-2xl px-6 py-6 text-center max-w-md w-full">
+    <strong class="text-2xl text-gray-700">
+      Total: ₹<span id="cart-total">{{ total }}</span>
+    </strong>
 
     <div class="mt-6 flex justify-center gap-4">
-      <a href="{% url 'order' 1 %}" 
-         class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg shadow font-semibold">
-         ✅ Proceed to Order
-      </a>
+      {% if cart.food_items.exists %}
+  {% with first_item=cart.food_items.first %}
+    <a href="{% url 'order' first_item.restaurant.id %}" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg shadow font-semibold">
+      ✅ Proceed to Order
+    </a>
+  {% endwith %}
+{% endif %}
 
-      <a href="{% url 'home_page' %}" 
-         class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow font-semibold">
-         ← Back to Home
+      <a href="{% url 'home_page' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow font-semibold">
+        ← Back to Home
       </a>
     </div>
   </div>

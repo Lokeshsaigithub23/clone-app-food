@@ -21,7 +21,7 @@
 </head>
 
 <body class="text-gray-800 flex flex-col items-center py-10 px-4">
-  <!-- ✅ Restaurant Info Section -->
+  <!-- ✅ Restaurant Info -->
   <div class="bg-white/90 backdrop-blur-sm shadow-lg rounded-2xl p-6 text-center max-w-3xl w-full mb-10">
     {% if restaurant.image %}
       <img src="{{ restaurant.image.url }}" alt="{{ restaurant.name }}" 
@@ -56,27 +56,39 @@
           <p class="text-gray-600 text-sm mb-1">{{ food.description }}</p>
         {% endif %}
         <p class="text-gray-700 text-sm mb-1"><strong>Category:</strong> {{ food.category }}</p>
-        <p class="text-lg font-bold text-green-600">₹{{ food.price }}</p>
+        <p class="text-lg font-bold text-green-600 mb-3">₹{{ food.price }}</p>
+
+        <!-- ✅ Add to Cart + Order buttons (side by side) -->
+        <div class="flex justify-center gap-2">
+          <form method="post" action="{% url 'add_to_cart' food.id %}">
+            {% csrf_token %}
+            <button type="submit"
+                    class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg shadow text-sm">
+              🛒 Add to Cart
+            </button>
+          </form>
+
+          <form method="post" action="{% url 'order' restaurant.id %}">
+            {% csrf_token %}
+              <button class="order-now-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg shadow text-sm" data-restaurant-id="{{ restaurant.id }}"> ✅ Order Now</button>
+          </form>
+
+        </div>
       </div>
     {% empty %}
       <p class="text-white text-lg text-center col-span-full">No menu items available.</p>
     {% endfor %}
   </div>
 
-  <!-- ✅ Action Buttons -->
+  <!-- ✅ Bottom Buttons -->
   <div class="mt-10 flex gap-4 flex-wrap justify-center">
     <a href="{% url 'cart_page' %}" 
        class="bg-yellow-400 hover:bg-yellow-500 text-white px-6 py-3 rounded-lg font-semibold shadow">
       🛒 Go to Cart
     </a>
 
-    <a href="{% url 'order' restaurant.id %}" 
-       class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold shadow">
-      ✅ Order Now
-    </a>
-
     <a href="{% url 'home_page' %}" 
-       class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold shadow">
+       class="bg-gray-700 hover:bg-gray-800 text-white px-6 py-3 rounded-lg font-semibold shadow">
       ← Back to Home
     </a>
   </div>
